@@ -1,0 +1,33 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
+}
+
+group 'net.edhum'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    implementation group: 'net.edhum', name: 'bukkit-api', version: '1.0-SNAPSHOT'
+}
+
+processResources {
+    filter ReplaceTokens, tokens: [
+            NAME         : project.name,
+            VERSION      : project.version,
+            AUTHOR       : project.hasProperty('author') ? project.property('author') : 'Unknown author',
+            'API-VERSION': project.hasProperty('api-version') ? project.property('api-version') : '1.17',
+            'MAIN-CLASS' : project.property('main-class')
+    ]
+}
+
+shadowJar {
+    archiveFileName = "${project.name}.jar"
+    destinationDirectory = file(project.property('target-directory'))
+}

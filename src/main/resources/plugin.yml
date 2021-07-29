@@ -1,0 +1,5 @@
+name: @NAME@
+version: @VERSION@
+author: @AUTHOR@
+api-version: @API-VERSION@
+main: @MAIN-CLASS@
