@@ -1,4 +1,4 @@
-package net.edhum.bukkit.core.listener;
+package net.edhum.bukkit.core.listener.command;
 
 import com.google.inject.Inject;
 import net.edhum.common.command.Command;
@@ -38,7 +38,7 @@ public class PlayerCommandSendListener implements Listener {
         UUID uuid = event.getPlayer().getUniqueId();
         Player player = this.playerRepository.find(this.playerRepositoryFilterFactory.uuid(uuid)).orElseThrow();
 
-        Set<CommandTree> allowedCommands = this.commandRepository.findAll(this.commandSenderFilter.commandSender(player));
+        Set<CommandTree> allowedCommands = this.commandRepository.findAll(this.commandSenderFilter.sender(player));
 
         event.getCommands().removeIf(command -> allowedCommands.stream()
                 .filter(commandTree -> {
