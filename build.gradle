@@ -11,10 +11,16 @@ version '1.0-SNAPSHOT'
 repositories {
     mavenCentral()
     mavenLocal()
+
+    maven {
+        url 'https://papermc.io/repo/repository/maven-public/'
+    }
 }
 
 dependencies {
     implementation group: 'net.edhum', name: 'bukkit-api', version: '1.0-SNAPSHOT'
+
+    compileOnly group: 'io.papermc.paper', name: 'paper-api', version: '1.17.1-R0.1-SNAPSHOT'
 }
 
 processResources {
