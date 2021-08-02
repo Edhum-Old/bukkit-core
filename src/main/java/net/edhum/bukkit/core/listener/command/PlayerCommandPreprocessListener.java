@@ -1,15 +1,15 @@
 package net.edhum.bukkit.core.listener.command;
 
 import com.google.inject.Inject;
+import net.edhum.bukkit.api.player.Player;
+import net.edhum.bukkit.api.player.repository.PlayerRepository;
+import net.edhum.bukkit.api.player.repository.filter.PlayerFilterFactory;
 import net.edhum.common.command.CommandTree;
 import net.edhum.common.command.repository.CommandRepository;
 import net.edhum.common.command.repository.filter.CommandRepositoryFilterFactory;
 import net.edhum.common.message.MessageBuilderFactory;
 import net.edhum.common.message.context.receiver.ReceiverContextFactory;
 import net.edhum.common.message.context.writer.WriterContextFactory;
-import net.edhum.common.player.Player;
-import net.edhum.common.player.repository.PlayerRepository;
-import net.edhum.common.player.repository.filter.PlayerRepositoryFilterFactory;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -20,19 +20,19 @@ import java.util.UUID;
 public class PlayerCommandPreprocessListener implements Listener {
 
     private final PlayerRepository playerRepository;
-    private final PlayerRepositoryFilterFactory playerRepositoryFilterFactory;
+    private final PlayerFilterFactory playerFilterFactory;
     private final CommandRepository commandRepository;
     private final CommandRepositoryFilterFactory commandRepositoryFilterFactory;
     private final Messages messages;
 
     @Inject
     public PlayerCommandPreprocessListener(PlayerRepository playerRepository,
-                                           PlayerRepositoryFilterFactory playerRepositoryFilterFactory,
+                                           PlayerFilterFactory playerFilterFactory,
                                            CommandRepository commandRepository,
                                            CommandRepositoryFilterFactory commandRepositoryFilterFactory,
                                            Messages messages) {
         this.playerRepository = playerRepository;
-        this.playerRepositoryFilterFactory = playerRepositoryFilterFactory;
+        this.playerFilterFactory = playerFilterFactory;
         this.commandRepository = commandRepository;
         this.commandRepositoryFilterFactory = commandRepositoryFilterFactory;
         this.messages = messages;
@@ -41,7 +41,7 @@ public class PlayerCommandPreprocessListener implements Listener {
     @EventHandler
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
-        Player sender = this.playerRepository.find(this.playerRepositoryFilterFactory.uuid(uuid)).orElseThrow();
+        Player sender = this.playerRepository.find(this.playerFilterFactory.uuid(uuid)).orElseThrow();
         String[] args = event.getMessage().split(" ");
 
         String command = args[0].substring(1); // Slash removal
