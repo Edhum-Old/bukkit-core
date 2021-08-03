@@ -16,6 +16,6 @@ public class BukkitCorePlugin extends EdhumPlugin {
 
     @Override
     public Stage getStage() {
-        return Stage.PRODUCTION;
+        return Stage.DEVELOPMENT;
     }
 }
