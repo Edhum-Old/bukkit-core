@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
 import net.edhum.bukkit.core.listener.command.PlayerCommandPreprocessListener;
 import net.edhum.bukkit.core.listener.command.PlayerCommandSendListener;
+import net.edhum.bukkit.core.listener.economy.PlayerInteractListener;
 import net.edhum.bukkit.core.listener.gui.InventoryClickListener;
 import net.edhum.bukkit.core.listener.stream.PlayerJoinListener;
 import net.edhum.bukkit.core.listener.stream.PlayerLoginListener;
@@ -17,6 +18,8 @@ public class ListenerModule extends AbstractModule {
 
         listenerBinder.addBinding().to(PlayerCommandPreprocessListener.class);
         listenerBinder.addBinding().to(PlayerCommandSendListener.class);
+
+        listenerBinder.addBinding().to(PlayerInteractListener.class);
 
         listenerBinder.addBinding().to(InventoryClickListener.class);
 

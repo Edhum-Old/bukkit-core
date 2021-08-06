@@ -7,7 +7,7 @@ import net.edhum.bukkit.api.player.repository.filter.PlayerFilterFactory;
 import net.edhum.common.command.Command;
 import net.edhum.common.command.CommandTree;
 import net.edhum.common.command.repository.CommandRepository;
-import net.edhum.common.command.repository.filter.CommandRepositoryFilterFactory;
+import net.edhum.common.command.repository.filter.CommandFilterFactory;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandSendEvent;
@@ -20,17 +20,17 @@ public class PlayerCommandSendListener implements Listener {
     private final PlayerRepository playerRepository;
     private final PlayerFilterFactory playerFilterFactory;
     private final CommandRepository commandRepository;
-    private final CommandRepositoryFilterFactory commandSenderFilter;
+    private final CommandFilterFactory commandFilterFactory;
 
     @Inject
     public PlayerCommandSendListener(PlayerRepository playerRepository,
                                      PlayerFilterFactory playerFilterFactory,
                                      CommandRepository commandRepository,
-                                     CommandRepositoryFilterFactory commandSenderFilter) {
+                                     CommandFilterFactory commandFilterFactory) {
         this.playerRepository = playerRepository;
         this.playerFilterFactory = playerFilterFactory;
         this.commandRepository = commandRepository;
-        this.commandSenderFilter = commandSenderFilter;
+        this.commandFilterFactory = commandFilterFactory;
     }
 
     @EventHandler
@@ -38,7 +38,7 @@ public class PlayerCommandSendListener implements Listener {
         UUID uuid = event.getPlayer().getUniqueId();
         Player player = this.playerRepository.find(this.playerFilterFactory.uuid(uuid)).orElseThrow();
 
-        Collection<CommandTree> allowedCommands = this.commandRepository.findAll(this.commandSenderFilter.sender(player));
+        Collection<CommandTree> allowedCommands = this.commandRepository.findAll(this.commandFilterFactory.sender(player));
 
         event.getCommands().removeIf(command -> allowedCommands.stream()
                 .filter(commandTree -> {

@@ -2,7 +2,7 @@ package net.edhum.bukkit.core.listener.gui;
 
 import com.google.inject.Inject;
 import net.edhum.bukkit.api.gui.GUI;
-import net.edhum.bukkit.api.gui.GUIRepository;
+import net.edhum.bukkit.api.gui.repository.GUIRepository;
 import net.edhum.bukkit.api.item.Item;
 import net.edhum.bukkit.api.player.Player;
 import net.edhum.bukkit.api.player.repository.PlayerRepository;
