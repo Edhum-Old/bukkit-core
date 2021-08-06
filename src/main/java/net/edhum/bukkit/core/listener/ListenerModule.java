@@ -7,7 +7,8 @@ import net.edhum.bukkit.core.listener.command.PlayerCommandSendListener;
 import net.edhum.bukkit.core.listener.economy.PlayerInteractListener;
 import net.edhum.bukkit.core.listener.gui.InventoryClickListener;
 import net.edhum.bukkit.core.listener.stream.PlayerJoinListener;
-import net.edhum.bukkit.core.listener.stream.PlayerLoginListener;
+import net.edhum.bukkit.core.listener.stream.PlayerPreLoginListener;
+import net.edhum.bukkit.core.listener.stream.PlayerQuitListener;
 import org.bukkit.event.Listener;
 
 public class ListenerModule extends AbstractModule {
@@ -24,6 +25,7 @@ public class ListenerModule extends AbstractModule {
         listenerBinder.addBinding().to(InventoryClickListener.class);
 
         listenerBinder.addBinding().to(PlayerJoinListener.class);
-        listenerBinder.addBinding().to(PlayerLoginListener.class);
+        listenerBinder.addBinding().to(PlayerPreLoginListener.class);
+        listenerBinder.addBinding().to(PlayerQuitListener.class);
     }
 }

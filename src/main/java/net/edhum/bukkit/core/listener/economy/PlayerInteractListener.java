@@ -44,8 +44,6 @@ public class PlayerInteractListener implements Listener {
         Block block = event.getClickedBlock();
 
         if (block != null && block.getType() == Material.STONE && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            System.out.println("AH !");
-
             UUID uuid = event.getPlayer().getUniqueId();
             Player player = this.playerRepository.find(this.playerFilterFactory.uuid(uuid)).orElseThrow();
 
