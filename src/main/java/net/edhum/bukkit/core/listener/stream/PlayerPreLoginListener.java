@@ -15,28 +15,27 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 
 import java.util.UUID;
 
-public class PlayerLoginListener implements Listener {
+public class PlayerPreLoginListener implements Listener {
 
     private final HandshakeHandler handshakeHandler;
     private final Debugger debugger;
     private final Messages messages;
 
     @Inject
-    public PlayerLoginListener(HandshakeHandler handshakeHandler,
-                               Debugger debugger,
-                               Messages messages) {
+    public PlayerPreLoginListener(HandshakeHandler handshakeHandler,
+                                  Debugger debugger,
+                                  Messages messages) {
         this.handshakeHandler = handshakeHandler;
         this.debugger = debugger;
         this.messages = messages;
     }
 
     @EventHandler
-    public void onPlayerLogin(AsyncPlayerPreLoginEvent event) {
-        PlayerProfile bukkitPlayer = event.getPlayerProfile();
-
-        UUID uuid = bukkitPlayer.getId();
-
+    public void onPlayerPreLogin(AsyncPlayerPreLoginEvent event) {
         this.debugger.start();
+
+        PlayerProfile bukkitPlayer = event.getPlayerProfile();
+        UUID uuid = bukkitPlayer.getId();
 
         try {
             this.handshakeHandler.handshake(uuid);
