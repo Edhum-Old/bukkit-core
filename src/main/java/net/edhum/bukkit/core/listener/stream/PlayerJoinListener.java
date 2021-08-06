@@ -6,7 +6,8 @@ import net.edhum.bukkit.api.player.Player;
 import net.edhum.bukkit.api.player.repository.PlayerRepository;
 import net.edhum.bukkit.api.player.repository.filter.PlayerFilterFactory;
 import net.edhum.common.message.MessageArgument;
-import net.edhum.common.message.MessageBuilderFactory;
+import net.edhum.common.message.MessageBuilder;
+import net.edhum.common.message.MessageService;
 import net.edhum.common.message.context.writer.WriterContextFactory;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -41,21 +42,24 @@ public class PlayerJoinListener implements Listener {
 
     private static class Messages {
 
-        private final MessageBuilderFactory messageBuilder;
+        private final MessageService messageService;
         private final BukkitReceiverContextFactory receiverContextFactory;
         private final WriterContextFactory writerContextFactory;
 
         @Inject
-        public Messages(MessageBuilderFactory messageBuilder, BukkitReceiverContextFactory receiverContextFactory, WriterContextFactory writerContextFactory) {
-            this.messageBuilder = messageBuilder;
+        public Messages(MessageService messageService, BukkitReceiverContextFactory receiverContextFactory, WriterContextFactory writerContextFactory) {
+            this.messageService = messageService;
             this.receiverContextFactory = receiverContextFactory;
             this.writerContextFactory = writerContextFactory;
         }
 
         public void handshake(Player player) {
-            this.messageBuilder.createMessageBuilder("handshake")
-                    .withArgument(new MessageArgument("player", player))
-                    .build().write(this.receiverContextFactory.broadcast(player), this.writerContextFactory.chat());
+            this.messageService.write(
+                    new MessageBuilder()
+                            .withPath("handshake")
+                            .withArgument(new MessageArgument("player", player))
+                            .build(),
+                            this.receiverContextFactory.broadcast(player), this.writerContextFactory.chat());
         }
     }
 }

@@ -5,7 +5,8 @@ import com.google.inject.Inject;
 import net.edhum.bukkit.api.handshake.HandshakeHandler;
 import net.edhum.common.i18n.Language;
 import net.edhum.common.i18n.ServerLanguage;
-import net.edhum.common.message.MessageBuilderFactory;
+import net.edhum.common.message.MessageBuilder;
+import net.edhum.common.message.MessageService;
 import net.edhum.common.utils.Debugger;
 import net.kyori.adventure.text.Component;
 import org.bukkit.event.EventHandler;
@@ -50,19 +51,22 @@ public class PlayerLoginListener implements Listener {
 
     private static class Messages {
 
-        private final MessageBuilderFactory messageBuilderFactory;
+        private final MessageService messageService;
         private final Language serverLanguage;
 
         @Inject
-        public Messages(MessageBuilderFactory messageBuilderFactory,
+        public Messages(MessageService messageService,
                         @ServerLanguage Language serverLanguage) {
-            this.messageBuilderFactory = messageBuilderFactory;
+            this.messageService = messageService;
             this.serverLanguage = serverLanguage;
         }
 
         public Component kick() {
-            String message = this.messageBuilderFactory.createMessageBuilder("handshake.error")
-                    .build().get(this.serverLanguage);
+            String message = this.messageService.get(
+                    new MessageBuilder()
+                            .withPath("handshake.error")
+                            .build(),
+                    this.serverLanguage);
 
             return Component.text(message);
         }

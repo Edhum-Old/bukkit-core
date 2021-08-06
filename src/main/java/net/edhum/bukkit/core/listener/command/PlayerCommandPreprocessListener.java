@@ -6,8 +6,9 @@ import net.edhum.bukkit.api.player.repository.PlayerRepository;
 import net.edhum.bukkit.api.player.repository.filter.PlayerFilterFactory;
 import net.edhum.common.command.CommandTree;
 import net.edhum.common.command.repository.CommandRepository;
-import net.edhum.common.command.repository.filter.CommandRepositoryFilterFactory;
-import net.edhum.common.message.MessageBuilderFactory;
+import net.edhum.common.command.repository.filter.CommandFilterFactory;
+import net.edhum.common.message.MessageBuilder;
+import net.edhum.common.message.MessageService;
 import net.edhum.common.message.context.receiver.ReceiverContextFactory;
 import net.edhum.common.message.context.writer.WriterContextFactory;
 import org.bukkit.event.EventHandler;
@@ -22,19 +23,19 @@ public class PlayerCommandPreprocessListener implements Listener {
     private final PlayerRepository playerRepository;
     private final PlayerFilterFactory playerFilterFactory;
     private final CommandRepository commandRepository;
-    private final CommandRepositoryFilterFactory commandRepositoryFilterFactory;
+    private final CommandFilterFactory commandFilterFactory;
     private final Messages messages;
 
     @Inject
     public PlayerCommandPreprocessListener(PlayerRepository playerRepository,
                                            PlayerFilterFactory playerFilterFactory,
                                            CommandRepository commandRepository,
-                                           CommandRepositoryFilterFactory commandRepositoryFilterFactory,
+                                           CommandFilterFactory commandFilterFactory,
                                            Messages messages) {
         this.playerRepository = playerRepository;
         this.playerFilterFactory = playerFilterFactory;
         this.commandRepository = commandRepository;
-        this.commandRepositoryFilterFactory = commandRepositoryFilterFactory;
+        this.commandFilterFactory = commandFilterFactory;
         this.messages = messages;
     }
 
@@ -46,7 +47,7 @@ public class PlayerCommandPreprocessListener implements Listener {
 
         String command = args[0].substring(1); // Slash removal
 
-        Optional<CommandTree> optionalTree = this.commandRepository.find(this.commandRepositoryFilterFactory.name(command));
+        Optional<CommandTree> optionalTree = this.commandRepository.find(this.commandFilterFactory.name(command));
 
         if (optionalTree.isEmpty()) {
             this.messages.unknownCommand(sender);
@@ -57,20 +58,23 @@ public class PlayerCommandPreprocessListener implements Listener {
 
     private static class Messages {
 
-        private final MessageBuilderFactory messageBuilderFactory;
+        private final MessageService messageService;
         private final ReceiverContextFactory receiverContextFactory;
         private final WriterContextFactory writerContextFactory;
 
         @Inject
-        public Messages(MessageBuilderFactory messageBuilderFactory, ReceiverContextFactory receiverContextFactory, WriterContextFactory writerContextFactory) {
-            this.messageBuilderFactory = messageBuilderFactory;
+        public Messages(MessageService messageService, ReceiverContextFactory receiverContextFactory, WriterContextFactory writerContextFactory) {
+            this.messageService = messageService;
             this.receiverContextFactory = receiverContextFactory;
             this.writerContextFactory = writerContextFactory;
         }
 
         public void unknownCommand(Player sender) {
-            this.messageBuilderFactory.createMessageBuilder("command.unknown_command")
-                    .build().write(this.receiverContextFactory.single(sender), this.writerContextFactory.chat());
+            this.messageService.write(
+                    new MessageBuilder()
+                            .withPath("command.unknown_command")
+                            .build(),
+                    this.receiverContextFactory.single(sender), this.writerContextFactory.chat());
         }
     }
 }
